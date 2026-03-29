@@ -1,0 +1,12 @@
+# ============================================================
+# .htaccess — Réécriture d'URL GesStock
+# Placer à la RACINE du projet gesstock_bold/
+# ============================================================
+ 
+Options -Indexes
+RewriteEngine On
+ 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+ 
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

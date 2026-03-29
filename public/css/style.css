@@ -1,0 +1,117 @@
+/* Personnalisé */
+:root {
+    --primary-color: #667eea;
+    --secondary-color: #764ba2;
+}
+
+body {
+    background-color: #f5f5f5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar {
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.sidebar .nav-link {
+    color: #666;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+    padding-left: 0.75rem;
+}
+
+.sidebar .nav-link:hover {
+    color: var(--primary-color);
+    background-color: #f8f9fa;
+    border-left-color: var(--primary-color);
+}
+
+.sidebar .nav-link.active {
+    color: var(--primary-color);
+    background-color: #f8f9fa;
+    border-left-color: var(--primary-color);
+}
+
+main {
+    margin-top: 56px;
+    margin-left: 240px;
+    min-height: calc(100vh - 56px);
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+    
+    main {
+        margin-left: 0;
+    }
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.badge {
+    padding: 0.35em 0.65em;
+}
+
+footer {
+    background-color: #f8f9fa;
+    color: #666;
+}
+
+.table {
+    background-color: white;
+}
+
+.table thead th {
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    color: #333;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+.auth-container {
+    max-width: 400px;
+}
