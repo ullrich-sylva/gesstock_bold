@@ -16,8 +16,8 @@ define('PUBLIC_PATH', ROOT_PATH . '/public');
 
 // Permissions
 define('ROLE_ADMIN', 'admin');
-define('ROLE_USER', 'user');
-define('ROLE_VIEWER', 'viewer');
+define('ROLE_GESTIONNAIRE', 'gestionnaire');
+define('ROLE_MAGASINIER', 'magasinier');
 
 // Messages
 define('MSG_SUCCESS', 'Opération réussie!');

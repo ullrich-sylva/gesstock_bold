@@ -1,30 +1,48 @@
-<h2>Alertes</h2>
+<div class="page-header">
+    <div class="page-header-left">
+        <div class="page-header-icon yellow">
+            <i data-lucide="bell-ring" style="width:24px;height:24px;"></i>
+        </div>
+        <div>
+            <h1 class="page-title">Alertes</h1>
+            <p class="page-subtitle">Notifications et alertes de stock</p>
+        </div>
+    </div>
+</div>
 
 <?php if (!empty($alertes)): ?>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Équipement</th>
-                    <th>Type</th>
-                    <th>Message</th>
-                    <th>Date</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($alertes as $a): ?>
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
                     <tr>
-                        <td><?php echo htmlspecialchars($a['equipement_nom'] ?? ''); ?></td>
-                        <td><?php echo htmlspecialchars($a['type']); ?></td>
-                        <td><?php echo htmlspecialchars($a['message']); ?></td>
-                        <td><?php echo date('d/m/Y H:i', strtotime($a['date_creation'])); ?></td>
-                        <td><span class="badge bg-warning"><?php echo $a['statut']; ?></span></td>
+                        <th>Équipement</th>
+                        <th>Type</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                        <th>Statut</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($alertes as $a): ?>
+                        <tr>
+                            <td><strong><?php echo htmlspecialchars($a['equipement_nom'] ?? '—'); ?></strong></td>
+                            <td><span class="badge bg-warning"><?php echo htmlspecialchars($a['type']); ?></span></td>
+                            <td><?php echo htmlspecialchars($a['message']); ?></td>
+                            <td><?php echo date('d/m/Y H:i', strtotime($a['date_creation'])); ?></td>
+                            <td><span class="badge bg-danger"><?php echo $a['statut']; ?></span></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 <?php else: ?>
-    <div class="alert alert-info">Aucune alerte active</div>
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i data-lucide="check-circle" style="width:28px;height:28px;"></i>
+        </div>
+        <div class="empty-state-title">Aucune alerte</div>
+        <div class="empty-state-text">Tout est en ordre, aucune alerte active pour le moment</div>
+    </div>
 <?php endif; ?>

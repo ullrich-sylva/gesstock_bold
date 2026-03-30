@@ -8,6 +8,7 @@ class CategorieController extends Controller {
     
     public function __construct(Request $request, Response $response) {
         parent::__construct($request, $response);
+        $this->requireGestionnaire();
         $this->model = new CategorieModel();
     }
     
@@ -25,19 +26,18 @@ class CategorieController extends Controller {
     public function store() {
         $this->requireAuth();
         
-        $name = $this->request->post('nom');
+        $libelle = $this->request->post('libelle');
         $description = $this->request->post('description');
         
-        if (empty($name)) {
-            setFlash('error', 'Le nom est requis');
+        if (empty($libelle)) {
+            setFlash('error', 'Le libellé est requis');
             $this->response->redirect('/categorie/create');
             return;
         }
         
         $data = [
-            'nom' => $name,
-            'description' => $description,
-            'date_creation' => date('Y-m-d H:i:s')
+            'libelle' => $libelle,
+            'description' => $description
         ];
         
         if ($this->model->create($data)) {
@@ -85,17 +85,17 @@ class CategorieController extends Controller {
             return;
         }
         
-        $name = $this->request->post('nom');
+        $libelle = $this->request->post('libelle');
         $description = $this->request->post('description');
         
-        if (empty($name)) {
-            setFlash('error', 'Le nom est requis');
+        if (empty($libelle)) {
+            setFlash('error', 'Le libellé est requis');
             $this->response->redirect("/categorie/{$id}/edit");
             return;
         }
         
         $data = [
-            'nom' => $name,
+            'libelle' => $libelle,
             'description' => $description
         ];
         

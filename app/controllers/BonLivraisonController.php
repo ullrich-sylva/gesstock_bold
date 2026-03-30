@@ -34,13 +34,23 @@ class BonLivraisonController extends Controller {
             $this->response->redirect('/bon-livraison/create');
             return;
         }
+
+        // Vérifier si le numéro existe déjà
+        $existing = $this->model->getByNumero($reference);
+        if ($existing) {
+            setFlash('error', "Le numéro de bon '{$reference}' existe déjà");
+            $this->response->redirect('/bon-livraison/create');
+            return;
+        }
+        
+        $fournisseur_id = $this->request->post('id_fournisseur') ?: 1; // Fallback au premier fournisseur
         
         $data = [
-            'reference' => $reference,
-            'demandemateriel_id' => $demande_id,
-            'description' => $description,
-            'date_livraison' => date('Y-m-d'),
-            'date_creation' => date('Y-m-d H:i:s')
+            'numero_bon' => $reference,
+            'id_fournisseur' => $fournisseur_id,
+            'id_recepteur' => Auth::user()['id_utilisateur'],
+            'date_livraison' => date('Y-m-d H:i:s'),
+            'observation' => $description
         ];
         
         if ($this->model->create($data)) {

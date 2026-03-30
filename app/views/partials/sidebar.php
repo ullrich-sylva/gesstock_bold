@@ -1,83 +1,79 @@
 <?php
 $user = getCurrentUser();
+$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
+$basePath = '/GestionStock_bold';
+
+function isActive($path, $currentPath, $basePath) {
+    $full = $basePath . $path;
+    if ($path === '/dashboard') {
+        return ($currentPath === $full || $currentPath === $basePath || $currentPath === $basePath . '/');
+    }
+    return strpos($currentPath, $full) === 0;
+}
 ?>
-<nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
-    <div class="position-sticky pt-3">
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/dashboard">
-                    <i class="bi bi-house"></i> Tableau de bord
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/equipement">
-                    <i class="bi bi-box"></i> Équipements
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/categorie">
-                    <i class="bi bi-tags"></i> Catégories
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/fournisseur">
-                    <i class="bi bi-shop"></i> Fournisseurs
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/entree-stock">
-                    <i class="bi bi-arrow-down"></i> Entrées stock
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/sortie-stock">
-                    <i class="bi bi-arrow-up"></i> Sorties stock
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/demande-materiel">
-                    <i class="bi bi-file-earmark"></i> Demandes matériel
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/bon-livraison">
-                    <i class="bi bi-package"></i> Bons livraison
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/inventaire">
-                    <i class="bi bi-list-check"></i> Inventaires
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/alerte">
-                    <i class="bi bi-exclamation-triangle"></i> Alertes
-                </a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/rapport">
-                    <i class="bi bi-graph-up"></i> Rapports
-                </a>
-            </li>
-            
-            <?php if ($user && $user['role'] === 'admin'): ?>
-                <hr>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?php echo APP_URL; ?>/utilisateur">
-                        <i class="bi bi-people"></i> Utilisateurs
-                    </a>
-                </li>
-            <?php endif; ?>
-        </ul>
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header d-lg-none d-flex justify-content-between align-items-center p-3">
+        <h5 class="mb-0">MENU</h5>
+        <button class="btn-close btn-close-white" id="sidebarClose"></button>
     </div>
-</nav>
+    <div class="sidebar-section-label">Navigation</div>
+    <nav class="nav flex-column">
+        <a class="nav-link <?php echo isActive('/dashboard', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/dashboard">
+            <i data-lucide="layout-dashboard"></i> <span>Tableau de Bord</span>
+        </a>
+        <a class="nav-link <?php echo isActive('/equipement', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/equipement">
+            <i data-lucide="cpu"></i> <span>Équipements</span>
+        </a>
+        <?php if (Auth::hasAnyRole(['admin', 'gestionnaire'])): ?>
+            <a class="nav-link <?php echo isActive('/categorie', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/categorie">
+                <i data-lucide="folder-open"></i> <span>Catégories</span>
+            </a>
+            <a class="nav-link <?php echo isActive('/fournisseur', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/fournisseur">
+                <i data-lucide="building-2"></i> <span>Fournisseurs</span>
+            </a>
+        <?php endif; ?>
+    </nav>
+
+    <hr class="sidebar-divider">
+    <div class="sidebar-section-label">Stock</div>
+    <nav class="nav flex-column">
+        <a class="nav-link <?php echo isActive('/entree-stock', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/entree-stock">
+            <i data-lucide="package-plus"></i> <span>Entrées Stock</span>
+        </a>
+        <a class="nav-link <?php echo isActive('/sortie-stock', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/sortie-stock">
+            <i data-lucide="package-minus"></i> <span>Sorties Stock</span>
+        </a>
+        <a class="nav-link <?php echo isActive('/demande-materiel', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/demande-materiel">
+            <i data-lucide="clipboard-list"></i> <span>Demandes Matériel</span>
+        </a>
+        <a class="nav-link <?php echo isActive('/bon-livraison', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/bon-livraison">
+            <i data-lucide="truck"></i> <span>Bons de Livraison</span>
+        </a>
+    </nav>
+
+    <hr class="sidebar-divider">
+    <div class="sidebar-section-label">Suivi</div>
+    <nav class="nav flex-column">
+        <a class="nav-link <?php echo isActive('/inventaire', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/inventaire">
+            <i data-lucide="clipboard-check"></i> <span>Inventaires</span>
+        </a>
+        <a class="nav-link <?php echo isActive('/alerte', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/alerte">
+            <i data-lucide="bell-ring"></i> <span>Alertes</span>
+        </a>
+        <?php if (Auth::hasAnyRole(['admin', 'gestionnaire'])): ?>
+            <a class="nav-link <?php echo isActive('/rapport', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/rapport">
+                <i data-lucide="bar-chart-3"></i> <span>Rapports</span>
+            </a>
+        <?php endif; ?>
+    </nav>
+
+    <?php if (Auth::isAdmin()): ?>
+        <hr class="sidebar-divider">
+        <div class="sidebar-section-label">Administration</div>
+        <nav class="nav flex-column">
+            <a class="nav-link <?php echo isActive('/utilisateur', $currentPath, $basePath) ? 'active' : ''; ?>" href="<?php echo APP_URL; ?>/utilisateur">
+                <i data-lucide="users"></i> <span>Utilisateurs</span>
+            </a>
+        </nav>
+    <?php endif; ?>
+</aside>

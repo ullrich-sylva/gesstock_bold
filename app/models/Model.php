@@ -6,8 +6,8 @@ require_once CONFIG_PATH . '/database.php';
 // Classe de base pour tous les modèles
 class Model {
     protected $table;
+    protected $primaryKey = 'id';
     protected $pdo;
-    protected $db;
     
     public function __construct() {
         $database = new Database();
@@ -23,7 +23,7 @@ class Model {
     
     // Obtenir un enregistrement par ID
     public function getById($id) {
-        $sql = "SELECT * FROM {$this->table} WHERE id = ?";
+        $sql = "SELECT * FROM {$this->table} WHERE {$this->primaryKey} = ?";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$id]);
         return $stmt->fetch();
@@ -41,7 +41,7 @@ class Model {
     // Mettre à jour un enregistrement
     public function update($id, $data) {
         $set = implode(', ', array_map(fn($key) => "{$key} = ?", array_keys($data)));
-        $sql = "UPDATE {$this->table} SET {$set} WHERE id = ?";
+        $sql = "UPDATE {$this->table} SET {$set} WHERE {$this->primaryKey} = ?";
         $values = array_values($data);
         $values[] = $id;
         $stmt = $this->pdo->prepare($sql);
@@ -50,7 +50,7 @@ class Model {
     
     // Supprimer un enregistrement
     public function delete($id) {
-        $sql = "DELETE FROM {$this->table} WHERE id = ?";
+        $sql = "DELETE FROM {$this->table} WHERE {$this->primaryKey} = ?";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([$id]);
     }

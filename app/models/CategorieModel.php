@@ -2,13 +2,17 @@
 
 class CategorieModel extends Model {
     protected $table = 'categorie';
+    protected $primaryKey = 'id_categorie';
     
     public function getWithEquipements() {
-        $sql = "SELECT c.*, COUNT(e.id) as nombre_equipements 
-                FROM {$this->table} c
-                LEFT JOIN equipement e ON c.id = e.categorie_id
-                GROUP BY c.id";
-        $stmt = $this->pdo->query($sql);
-        return $stmt->fetchAll();
+        $sql = "SELECT * FROM {$this->table}";
+        try {
+            $stmt = $this->pdo->query($sql);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            error_log("Categorie getWithEquipements error: " . $e->getMessage());
+            return $this->getAll();
+        }
     }
+    
 }

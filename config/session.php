@@ -59,7 +59,7 @@ function getCurrentUser() {
 // Fonction pour définir l'utilisateur
 function setUser($user) {
     $_SESSION['user'] = $user;
-    $_SESSION['user_id'] = $user['id'] ?? null;
+    $_SESSION['user_id'] = $user['id_utilisateur'] ?? $user['id'] ?? null;
 }
 
 // Fonction de déconnexion

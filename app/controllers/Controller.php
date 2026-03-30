@@ -21,6 +21,25 @@ class Controller {
         if (!Auth::isAdmin()) {
             $this->response->setStatusCode(403);
             $this->response->render('errors/403');
+            exit;
+        }
+    }
+    
+    // Vérifier si l'utilisateur est gestionnaire ou admin
+    protected function requireGestionnaire() {
+        if (!Auth::hasAnyRole(['admin', 'gestionnaire'])) {
+            $this->response->setStatusCode(403);
+            $this->response->render('errors/403');
+            exit;
+        }
+    }
+    
+    // Vérifier si l'utilisateur est magasinier, gestionnaire ou admin
+    protected function requireMagasinier() {
+        if (!Auth::hasAnyRole(['admin', 'gestionnaire', 'magasinier'])) {
+            $this->response->setStatusCode(403);
+            $this->response->render('errors/403');
+            exit;
         }
     }
     

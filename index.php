@@ -56,9 +56,13 @@ $router = new Router($request, $response);
 // Routes d'authentification
 $router->get('/auth/login', 'Auth@login');
 $router->post('/auth/login', 'Auth@login');
-$router->get('/auth/register', 'Auth@register');
-$router->post('/auth/register', 'Auth@register');
 $router->get('/auth/logout', 'Auth@logout');
+
+// Routes de récupération de mot de passe
+$router->get('/auth/forgot-password', 'Auth@forgotPassword');
+$router->post('/auth/forgot-password', 'Auth@sendResetLink');
+$router->get('/auth/reset-password/{token}', 'Auth@resetPassword');
+$router->post('/auth/reset-password', 'Auth@updatePassword');
 
 // Routes du dashboard
 $router->get('/dashboard', 'Dashboard@index');

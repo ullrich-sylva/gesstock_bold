@@ -45,7 +45,7 @@ class UtilisateurController extends Controller {
             'nom' => $nom,
             'prenom' => $prenom,
             'mot_de_passe' => password_hash($password, PASSWORD_BCRYPT),
-            'role' => $role ?? ROLE_USER,
+            'role' => $role ?? ROLE_MAGASINIER,
             'actif' => 1,
             'date_creation' => date('Y-m-d H:i:s')
         ];

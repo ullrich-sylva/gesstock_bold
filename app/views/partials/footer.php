@@ -1,11 +1,13 @@
-<footer class="border-top mt-5 py-4">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <p class="text-muted">© 2024 <?php echo APP_NAME; ?>. Tous droits réservés.</p>
+<footer class="mt-auto py-3">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <span class="fw-semibold" style="color: var(--slate-700);">BOLD STOCK</span>
+                <span style="color: var(--slate-400);"> · </span>
+                <span>Gestion Stock Électrique © <?php echo date('Y'); ?></span>
             </div>
-            <div class="col-md-6 text-end">
-                <p class="text-muted">Version <?php echo APP_VERSION; ?></p>
+            <div>
+                Version <strong><?php echo APP_VERSION ?? '1.0'; ?></strong>
             </div>
         </div>
     </div>

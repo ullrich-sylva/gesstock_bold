@@ -10,6 +10,7 @@ class EntreeStockController extends Controller {
     
     public function __construct(Request $request, Response $response) {
         parent::__construct($request, $response);
+        $this->requireMagasinier();
         $this->model = new EntreeStockModel();
         $this->fournisseurModel = new FournisseurModel();
     }
@@ -21,37 +22,61 @@ class EntreeStockController extends Controller {
     }
     
     public function create() {
-        $this->requireAuth();
+        $this->requireMagasinier();
         $fournisseurs = $this->fournisseurModel->getActive();
         $this->response->view('entrees_stock/create', ['fournisseurs' => $fournisseurs]);
     }
     
     public function store() {
-        $this->requireAuth();
+        $this->requireMagasinier();
         
         $reference = $this->request->post('reference');
         $fournisseur_id = $this->request->post('fournisseur_id');
-        $description = $this->request->post('description');
+        $observation = $this->request->post('description');
         
         if (empty($reference) || empty($fournisseur_id)) {
             setFlash('error', 'Les champs obligatoires sont requis');
             $this->response->redirect('/entree-stock/create');
             return;
         }
+
+        require_once APP_PATH . '/models/BonLivraisonModel.php';
+        $bonModel = new BonLivraisonModel();
         
+        // 1. Chercher ou créer le bon de livraison
+        $bon = $bonModel->getByNumero($reference);
+        if ($bon) {
+            $id_bon = $bon['id_bon'];
+        } else {
+            $id_bon = $bonModel->create([
+                'numero_bon' => $reference,
+                'id_fournisseur' => $fournisseur_id,
+                'id_recepteur' => Auth::user()['id_utilisateur'],
+                'date_livraison' => date('Y-m-d H:i:s'),
+                'observation' => $observation
+            ]);
+        }
+        
+        if (!$id_bon) {
+            setFlash('error', 'Erreur lors de la préparation du bon de livraison');
+            $this->response->redirect('/entree-stock/create');
+            return;
+        }
+        
+        // 2. Créer l'entrée de stock
         $data = [
-            'reference' => $reference,
-            'fournisseur_id' => $fournisseur_id,
-            'description' => $description,
-            'date_entree' => date('Y-m-d'),
-            'date_creation' => date('Y-m-d H:i:s')
+            'id_bon' => $id_bon,
+            'id_utilisateur' => Auth::user()['id_utilisateur'],
+            'date_entree' => date('Y-m-d H:i:s'),
+            'statut' => 'en_attente',
+            'observation' => $observation
         ];
         
         if ($this->model->create($data)) {
-            setFlash('success', 'Entrée de stock créée');
+            setFlash('success', 'Entrée de stock créée et mise en attente de validation');
             $this->response->redirect('/entree-stock');
         } else {
-            setFlash('error', 'Erreur lors de la création');
+            setFlash('error', 'Erreur lors de la création de l\'entrée');
             $this->response->redirect('/entree-stock/create');
         }
     }

@@ -8,6 +8,7 @@ class InventaireController extends Controller {
     
     public function __construct(Request $request, Response $response) {
         parent::__construct($request, $response);
+        $this->requireMagasinier();
         $this->model = new InventaireModel();
     }
     
@@ -18,12 +19,12 @@ class InventaireController extends Controller {
     }
     
     public function create() {
-        $this->requireAuth();
+        $this->requireMagasinier();
         $this->response->view('inventaires/create');
     }
     
     public function store() {
-        $this->requireAuth();
+        $this->requireMagasinier();
         
         $reference = $this->request->post('reference');
         $description = $this->request->post('description');
@@ -35,11 +36,9 @@ class InventaireController extends Controller {
         }
         
         $data = [
-            'reference' => $reference,
-            'description' => $description,
-            'utilisateur_id' => Auth::user()['id'],
-            'date_inventaire' => date('Y-m-d'),
-            'date_creation' => date('Y-m-d H:i:s')
+            'id_utilisateur' => Auth::user()['id_utilisateur'],
+            'date_inventaire' => date('Y-m-d H:i:s'),
+            'observation' => ($reference ? "REF: " . $reference . " - " : "") . $description
         ];
         
         if ($this->model->create($data)) {

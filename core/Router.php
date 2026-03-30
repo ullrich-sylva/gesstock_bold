@@ -2,6 +2,7 @@
 
 class Router {
     private $routes = [];
+    private $params = [];
     private $request;
     private $response;
     
@@ -50,7 +51,7 @@ class Router {
         if (isset($this->routes[$method])) {
             foreach ($this->routes[$method] as $route => $controller) {
                 if ($this->matchRoute($route, $path)) {
-                    return $this->executeController($controller);
+                    return $this->executeController($controller, $this->params);
                 }
             }
         }
@@ -62,16 +63,23 @@ class Router {
     
     // Vérifier si une route correspond
     private function matchRoute($route, $path) {
-        $routePattern = preg_replace('/\{[^}]+\}/', '[^/]+', $route);
+        $routePattern = preg_replace('/\{[^}]+\}/', '([^/]+)', $route);
         $routePattern = str_replace('/', '\/', $routePattern);
-        return (bool)preg_match("/^{$routePattern}$/", $path);
+        
+        if (preg_match("/^{$routePattern}$/", $path, $matches)) {
+            array_shift($matches); // Supprimer le match complet
+            $this->params = $matches;
+            return true;
+        }
+        
+        return false;
     }
     
     // Exécuter un contrôleur
-    private function executeController($controller) {
+    private function executeController($controller, $params = []) {
         // Si c'est une closure, l'exécuter directement
         if (is_callable($controller)) {
-            return call_user_func($controller);
+            return call_user_func_array($controller, $params);
         }
         
         if (strpos($controller, '@') === false) {
@@ -93,6 +101,6 @@ class Router {
             die("Erreur: La méthode {$methodName} n'existe pas dans {$className}");
         }
         
-        return $controllerInstance->$methodName();
+        return call_user_func_array([$controllerInstance, $methodName], $params);
     }
 }

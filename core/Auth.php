@@ -35,7 +35,7 @@ class Auth {
             'prenom' => $prenom,
             'login' => $login,
             'mot_de_passe' => password_hash($password, PASSWORD_BCRYPT),
-            'role' => 'technicien',
+            'role' => ROLE_MAGASINIER,
             'actif' => 1,
             'date_creation' => date('Y-m-d H:i:s')
         ];
@@ -88,7 +88,23 @@ class Auth {
     
     // Vérifier si l'utilisateur est admin
     public static function isAdmin() {
-        return self::hasRole('administrateur');
+        return self::hasRole('admin');
+    }
+    
+    // Vérifier si l'utilisateur est gestionnaire
+    public static function isGestionnaire() {
+        return self::hasRole('gestionnaire');
+    }
+    
+    // Vérifier si l'utilisateur est magasinier
+    public static function isMagasinier() {
+        return self::hasRole('magasinier');
+    }
+    
+    // Vérifier si l'utilisateur a l'un des rôles spécifiés
+    public static function hasAnyRole($roles) {
+        $user = getCurrentUser();
+        return $user && in_array($user['role'], (array)$roles);
     }
     
     // Obtenir l'utilisateur actuel

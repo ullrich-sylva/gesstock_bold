@@ -8,6 +8,7 @@ class FournisseurController extends Controller {
     
     public function __construct(Request $request, Response $response) {
         parent::__construct($request, $response);
+        $this->requireGestionnaire();
         $this->model = new FournisseurModel();
     }
     
@@ -40,9 +41,7 @@ class FournisseurController extends Controller {
             'nom' => $nom,
             'email' => $email,
             'telephone' => $telephone,
-            'adresse' => $adresse,
-            'actif' => 1,
-            'date_creation' => date('Y-m-d H:i:s')
+            'adresse' => $adresse
         ];
         
         if ($this->model->create($data)) {

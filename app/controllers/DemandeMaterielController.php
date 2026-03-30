@@ -25,29 +25,28 @@ class DemandeMaterielController extends Controller {
     public function store() {
         $this->requireAuth();
         
-        $reference = $this->request->post('reference');
-        $description = $this->request->post('description');
+        $motif = $this->request->post('motif') ?? $this->request->post('reference');
+        $observation = $this->request->post('observation') ?? $this->request->post('description');
         
-        if (empty($reference)) {
-            setFlash('error', 'La référence est requise');
+        if (empty($motif)) {
+            setFlash('error', 'Le motif est requis');
             $this->response->redirect('/demande-materiel/create');
             return;
         }
         
         $data = [
-            'reference' => $reference,
-            'description' => $description,
-            'utilisateur_id' => Auth::user()['id'],
+            'id_technicien' => Auth::user()['id_utilisateur'],
+            'date_demande' => date('Y-m-d H:i:s'),
             'statut' => 'en_attente',
-            'date_demande' => date('Y-m-d'),
-            'date_creation' => date('Y-m-d H:i:s')
+            'motif' => $motif,
+            'observation' => $observation
         ];
         
         if ($this->model->create($data)) {
-            setFlash('success', 'Demande créée');
+            setFlash('success', 'Demande envoyée avec succès');
             $this->response->redirect('/demande-materiel');
         } else {
-            setFlash('error', 'Erreur lors de la création');
+            setFlash('error', 'Erreur lors de la création de la demande');
             $this->response->redirect('/demande-materiel/create');
         }
     }
@@ -82,7 +81,7 @@ class DemandeMaterielController extends Controller {
         $this->requireAuth();
         
         $data = [
-            'description' => $this->request->post('description'),
+            'observation' => $this->request->post('description'),
             'statut' => $this->request->post('statut')
         ];
         

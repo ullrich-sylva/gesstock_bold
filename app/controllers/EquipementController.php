@@ -10,6 +10,7 @@ class EquipementController extends Controller {
     
     public function __construct(Request $request, Response $response) {
         parent::__construct($request, $response);
+        $this->requireMagasinier(); // Base access for all authenticated roles
         $this->model = new EquipementModel();
         $this->categorieModel = new CategorieModel();
     }
@@ -21,23 +22,23 @@ class EquipementController extends Controller {
     }
     
     public function create() {
-        $this->requireAuth();
+        $this->requireGestionnaire();
         $categories = $this->categorieModel->getAll();
         $this->response->view('equipements/create', ['categories' => $categories]);
     }
     
     public function store() {
-        $this->requireAuth();
+        $this->requireGestionnaire();
         
         $reference = $this->request->post('reference');
-        $nom = $this->request->post('nom');
-        $description = $this->request->post('description');
-        $categorie_id = $this->request->post('categorie_id');
-        $quantite = $this->request->post('quantite_stock');
-        $seuil_alerte = $this->request->post('seuil_alerte');
-        $prix_unitaire = $this->request->post('prix_unitaire');
+        $designation = $this->request->post('designation');
+        $id_categorie = $this->request->post('id_categorie');
+        $stock_actuel = $this->request->post('stock_actuel');
+        $seuil_min = $this->request->post('seuil_min');
+        $seuil_max = $this->request->post('seuil_max');
+        $unite = $this->request->post('unite');
         
-        if (empty($reference) || empty($nom) || empty($categorie_id)) {
+        if (empty($reference) || empty($designation) || empty($id_categorie)) {
             setFlash('error', 'Les champs obligatoires sont requis');
             $this->response->redirect('/equipement/create');
             return;
@@ -45,13 +46,12 @@ class EquipementController extends Controller {
         
         $data = [
             'reference' => $reference,
-            'nom' => $nom,
-            'description' => $description,
-            'categorie_id' => $categorie_id,
-            'quantite_stock' => $quantite ?? 0,
-            'seuil_alerte' => $seuil_alerte ?? 10,
-            'prix_unitaire' => $prix_unitaire ?? 0,
-            'date_creation' => date('Y-m-d H:i:s')
+            'designation' => $designation,
+            'id_categorie' => $id_categorie,
+            'stock_actuel' => $stock_actuel ?? 0,
+            'seuil_min' => $seuil_min ?? 5,
+            'seuil_max' => $seuil_max ?? 100,
+            'unite' => $unite ?? 'Pièce'
         ];
         
         if ($this->model->create($data)) {
@@ -77,7 +77,7 @@ class EquipementController extends Controller {
     }
     
     public function edit($id) {
-        $this->requireAuth();
+        $this->requireGestionnaire();
         $equipement = $this->model->getById($id);
         
         if (!$equipement) {
@@ -91,7 +91,7 @@ class EquipementController extends Controller {
     }
     
     public function update($id) {
-        $this->requireAuth();
+        $this->requireGestionnaire();
         
         $equipement = $this->model->getById($id);
         if (!$equipement) {
@@ -101,12 +101,13 @@ class EquipementController extends Controller {
         }
         
         $data = [
-            'nom' => $this->request->post('nom'),
-            'description' => $this->request->post('description'),
-            'categorie_id' => $this->request->post('categorie_id'),
-            'quantite_stock' => $this->request->post('quantite_stock'),
-            'seuil_alerte' => $this->request->post('seuil_alerte'),
-            'prix_unitaire' => $this->request->post('prix_unitaire')
+            'reference' => $this->request->post('reference'),
+            'designation' => $this->request->post('designation'),
+            'id_categorie' => $this->request->post('id_categorie'),
+            'stock_actuel' => $this->request->post('stock_actuel'),
+            'seuil_min' => $this->request->post('seuil_min'),
+            'seuil_max' => $this->request->post('seuil_max'),
+            'unite' => $this->request->post('unite') ?? 'Pièce'
         ];
         
         if ($this->model->update($id, $data)) {
