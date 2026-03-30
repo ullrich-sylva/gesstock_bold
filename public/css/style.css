@@ -660,18 +660,22 @@ main {
 }
 
 .table thead {
-    background: var(--slate-800);
+    background: #1e293b !important; /* Force darker background */
+    color: #ffffff !important;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .table thead th {
-    color: white;
-    font-weight: 600;
-    font-size: var(--font-size-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 14px 16px;
-    border: none;
-    white-space: nowrap;
+    color: #ffffff !important; /* Force white text */
+    background: #1e293b !important;
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    padding: 16px 20px !important;
+    border: none !important;
+    white-space: nowrap !important;
+    border-bottom: 3px solid #3b82f6 !important;
 }
 
 .table tbody tr {

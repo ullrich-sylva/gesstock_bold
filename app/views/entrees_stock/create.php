@@ -16,7 +16,7 @@
             <div class="row g-3">
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label for="reference" class="form-label">Référence <span class="text-danger">*</span></label>
+                        <label for="reference" class="form-label">Référence / N° Bon <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="reference" name="reference" placeholder="ENT-2024-001" required>
                     </div>
                 </div>
@@ -29,6 +29,25 @@
                                 <option value="<?php echo $f['id_fournisseur']; ?>"><?php echo htmlspecialchars($f['nom']); ?></option>
                             <?php endforeach; ?>
                         </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label for="id_equipement" class="form-label">Équipement <span class="text-danger">*</span></label>
+                        <select class="form-select" id="id_equipement" name="id_equipement" required>
+                            <option value="">— Sélectionner l'équipement —</option>
+                            <?php foreach ($equipements as $e): ?>
+                                <option value="<?php echo $e['id_equipement']; ?>"><?php echo htmlspecialchars($e['designation']); ?> (Stock: <?php echo $e['stock_actuel']; ?>)</option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="quantite" class="form-label">Quantité reçue <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="quantite" name="quantite" min="1" required>
                     </div>
                 </div>
             </div>

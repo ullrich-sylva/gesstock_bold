@@ -51,7 +51,11 @@ class SortieStockController extends Controller {
         ];
         
         if ($this->model->create($data)) {
-            setFlash('success', 'Sortie de stock enregistrée et en attente de validation');
+            // Mise à jour automatique du stock et vérification des alertes
+            $equipementModel = new EquipementModel();
+            $equipementModel->updateStock($id_equipement, -$quantite);
+            
+            setFlash('success', 'Sortie de stock enregistrée et stock mis à jour');
             $this->response->redirect('/sortie-stock');
         } else {
             setFlash('error', 'Erreur lors de la création');

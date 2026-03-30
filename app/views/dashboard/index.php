@@ -69,19 +69,33 @@
             </div>
             <div class="card-body">
                 <?php if (!empty($active_alerts)): ?>
-                    <ul class="list-group list-group-flush">
-                        <?php foreach (array_slice($active_alerts, 0, 5) as $alert): ?>
-                            <li class="list-group-item d-flex align-items-start gap-3">
-                                <div class="kpi-icon red" style="width:36px;height:36px;min-width:36px;">
-                                    <i data-lucide="alert-circle" style="width:16px;height:16px;"></i>
-                                </div>
-                                <div>
-                                    <strong><?php echo htmlspecialchars($alert['equipement_nom']); ?></strong><br>
-                                    <small class="text-muted"><?php echo htmlspecialchars($alert['message']); ?></small>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Équipement</th>
+                                    <th>Message</th>
+                                    <th class="text-end">Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach (array_slice($active_alerts, 0, 5) as $alert): ?>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="kpi-icon red" style="width:28px;height:28px;min-width:28px;">
+                                                    <i data-lucide="alert-circle" style="width:14px;height:14px;"></i>
+                                                </div>
+                                                <span class="fw-bold"><?php echo htmlspecialchars($alert['equipement_nom']); ?></span>
+                                            </div>
+                                        </td>
+                                        <td><small class="text-muted"><?php echo htmlspecialchars($alert['message']); ?></small></td>
+                                        <td class="text-end"><span class="badge bg-danger">Active</span></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="mt-3">
                         <a href="<?php echo APP_URL; ?>/alerte" class="btn btn-sm btn-outline-primary">
                             <i data-lucide="arrow-right" style="width:14px;height:14px;"></i> Voir toutes les alertes
@@ -108,17 +122,28 @@
             </div>
             <div class="card-body">
                 <?php if (!empty($low_stock_equipements)): ?>
-                    <ul class="list-group list-group-flush">
-                        <?php foreach (array_slice($low_stock_equipements, 0, 5) as $equipement): ?>
-                            <li class="list-group-item d-flex align-items-center justify-content-between">
-                                <div>
-                                    <strong><?php echo htmlspecialchars($equipement['nom']); ?></strong><br>
-                                    <small class="text-muted">Seuil : <?php echo $equipement['seuil_alerte']; ?></small>
-                                </div>
-                                <span class="badge bg-danger"><?php echo $equipement['quantite_stock']; ?> en stock</span>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Équipement</th>
+                                    <th>Seuil</th>
+                                    <th class="text-end">En Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach (array_slice($low_stock_equipements, 0, 5) as $equipement): ?>
+                                    <tr>
+                                        <td><strong><?php echo htmlspecialchars($equipement['nom']); ?></strong></td>
+                                        <td><?php echo $equipement['seuil_alerte']; ?></td>
+                                        <td class="text-end">
+                                            <span class="badge bg-danger"><?php echo $equipement['quantite_stock']; ?></span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="mt-3">
                         <a href="<?php echo APP_URL; ?>/equipement" class="btn btn-sm btn-outline-primary">
                             <i data-lucide="arrow-right" style="width:14px;height:14px;"></i> Voir tous les équipements

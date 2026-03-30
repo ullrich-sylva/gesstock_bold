@@ -24,7 +24,13 @@ class EntreeStockController extends Controller {
     public function create() {
         $this->requireMagasinier();
         $fournisseurs = $this->fournisseurModel->getActive();
-        $this->response->view('entrees_stock/create', ['fournisseurs' => $fournisseurs]);
+        require_once APP_PATH . '/models/EquipementModel.php';
+        $equipementModel = new EquipementModel();
+        $equipements = $equipementModel->getAll();
+        $this->response->view('entrees_stock/create', [
+            'fournisseurs' => $fournisseurs,
+            'equipements' => $equipements
+        ]);
     }
     
     public function store() {
@@ -32,9 +38,11 @@ class EntreeStockController extends Controller {
         
         $reference = $this->request->post('reference');
         $fournisseur_id = $this->request->post('fournisseur_id');
+        $id_equipement = $this->request->post('id_equipement');
+        $quantite = $this->request->post('quantite');
         $observation = $this->request->post('description');
         
-        if (empty($reference) || empty($fournisseur_id)) {
+        if (empty($reference) || empty($fournisseur_id) || empty($id_equipement) || empty($quantite)) {
             setFlash('error', 'Les champs obligatoires sont requis');
             $this->response->redirect('/entree-stock/create');
             return;
@@ -73,7 +81,12 @@ class EntreeStockController extends Controller {
         ];
         
         if ($this->model->create($data)) {
-            setFlash('success', 'Entrée de stock créée et mise en attente de validation');
+            // Mise à jour automatique du stock et vérification des alertes
+            require_once APP_PATH . '/models/EquipementModel.php';
+            $equipementModel = new EquipementModel();
+            $equipementModel->updateStock($id_equipement, $quantite);
+            
+            setFlash('success', 'Entrée de stock créée et stock mis à jour');
             $this->response->redirect('/entree-stock');
         } else {
             setFlash('error', 'Erreur lors de la création de l\'entrée');

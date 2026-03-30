@@ -6,6 +6,11 @@ if ($user) {
     if (empty(trim($initials))) {
         $initials = strtoupper(substr($user['login'] ?? 'U', 0, 2));
     }
+    
+    // Count unread alerts
+    require_once APP_PATH . '/models/AlerteModel.php';
+    $alerteNavModel = new AlerteModel();
+    $unreadCount = count($alerteNavModel->getActive());
 }
 ?>
 <nav class="navbar-main">
@@ -34,8 +39,13 @@ if ($user) {
     <ul class="navbar-nav ms-auto" style="gap:4px;">
         <?php if ($user): ?>
             <li class="nav-item nav-notification">
-                <a class="nav-link" href="<?php echo APP_URL; ?>/alerte" title="Alertes">
+                <a class="nav-link position-relative" href="<?php echo APP_URL; ?>/alerte" title="Alertes">
                     <i data-lucide="bell" style="width:18px;height:18px;"></i>
+                    <?php if ($unreadCount > 0): ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px; padding: 2px 5px; margin-top: 8px; margin-left: -5px;">
+                            <?php echo $unreadCount; ?>
+                        </span>
+                    <?php endif; ?>
                 </a>
             </li>
             <li class="nav-item dropdown">

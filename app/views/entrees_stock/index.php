@@ -21,6 +21,7 @@
                     <tr>
                         <th>Référence</th>
                         <th>Fournisseur</th>
+                        <th>Quantité</th>
                         <th>Date</th>
                         <th class="text-end">Actions</th>
                     </tr>
@@ -30,6 +31,7 @@
                         <tr>
                             <td><strong><?php echo htmlspecialchars($e['reference']); ?></strong></td>
                             <td><?php echo htmlspecialchars($e['fournisseur_nom'] ?? '—'); ?></td>
+                            <td><?php echo htmlspecialchars($e['quantite'] ?? '0'); ?></td>
                             <td><?php echo date('d/m/Y', strtotime($e['date_entree'])); ?></td>
                             <td class="text-end">
                                 <a href="<?php echo APP_URL; ?>/entree-stock/<?php echo $e['id_entree']; ?>" class="btn btn-sm btn-outline-primary" title="Voir">
